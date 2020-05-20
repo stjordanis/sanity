@@ -111,14 +111,14 @@ function NavBar(props) {
       <div className={styles.sanityStatus}>
         <SanityStatusContainer />
       </div>
-      <div className={styles.loginStatus} ref={onSetLoginStatusElement}>
-        <LoginStatus onLogout={onUserLogout} user={user} />
-      </div>
       {isSidecarEnabled && isSidecarEnabled() && (
         <div className={styles.sidecarStatus}>
           <SidecarToggleButton />
         </div>
       )}
+      <div className={styles.loginStatus} ref={onSetLoginStatusElement}>
+        <LoginStatus onLogout={onUserLogout} user={user} />
+      </div>
       <button className={styles.searchButton} onClick={onSearchOpen} type="button">
         <div className={styles.searchButtonInner} tabIndex={-1}>
           <span className={styles.searchButtonIcon}>

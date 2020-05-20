@@ -1,9 +1,10 @@
 import React from 'react'
 import {get} from 'lodash'
+import FormField from 'part:@sanity/components/formfields/default'
 import {Item as DefaultItem, List as DefaultList} from 'part:@sanity/components/lists/default'
 import {Item as SortableItem, List as SortableList} from 'part:@sanity/components/lists/sortable'
 import ArrayFunctions from 'part:@sanity/form-builder/input/array/functions'
-import Fieldset from 'part:@sanity/components/fieldsets/default'
+// import Fieldset from 'part:@sanity/components/fieldsets/default'
 import {PatchEvent, set, unset} from '../../PatchEvent'
 import {startsWith} from '@sanity/util/paths'
 import {resolveTypeName} from '../../utils/resolveTypeName'
@@ -42,7 +43,7 @@ type Props = {
   markers: Array<Marker>
 }
 export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
-  _element: Fieldset | null
+  _element: FormField | null
   _lastAddedIndex = -1
 
   set(nextValue: any[]) {
@@ -161,7 +162,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
     )
   }
 
-  setElement = (el: Fieldset | null) => {
+  setElement = (el: FormField | null) => {
     this._element = el
   }
 
@@ -177,18 +178,35 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
 
   render() {
     const {type, value, level, markers, readOnly, onChange, onFocus} = this.props
+
+    const formFieldProps = {
+      label: type.title,
+      description: type.description,
+      level: level,
+      markers
+    }
+
+    // @todo
+    // <Fieldset
+    //   legend={type.title}
+    //   description={type.description}
+    //   level={level}
+    //   tabIndex={0}
+    //   onFocus={onFocus}
+    //   ref={this.setElement}
+    //   markers={markers}
+    // >
+    // </Fieldset>
+
     return (
-      <Fieldset
-        legend={type.title}
-        description={type.description}
-        level={level}
-        tabIndex={0}
-        onFocus={onFocus}
-        ref={this.setElement}
-        markers={markers}
-      >
+      <FormField {...formFieldProps} ref={this.setElement}>
         <div className={styles.root}>
-          {value && value.length > 0 && <div className={styles.list}>{this.renderList(value)}</div>}
+          {value && value.length > 0 && (
+            <div className={styles.listContainer}>
+              <div className={styles.list}>{this.renderList(value)}</div>
+            </div>
+          )}
+
           <div className={styles.functions}>
             <ArrayFunctions
               type={type}
@@ -202,7 +220,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
             />
           </div>
         </div>
-      </Fieldset>
+      </FormField>
     )
   }
 }

@@ -1,12 +1,15 @@
 import React from 'react'
 import {get} from 'lodash'
-import Fieldset from 'part:@sanity/components/fieldsets/default'
+import FormField from 'part:@sanity/components/formfields/default'
+// import Fieldset from 'part:@sanity/components/fieldsets/default'
 import PatchEvent, {set, unset} from '../../PatchEvent'
 import Item from './Item'
-import styles from './styles/OptionsArrayInput.css'
 import {resolveTypeName} from '../../utils/resolveTypeName'
 import {resolveValueWithLegacyOptionsSupport, isLegacyOptionsItem} from './legacyOptionsSupport'
 import {Type} from '../../typedefs'
+
+import styles from './styles/OptionsArrayInput.css'
+
 function isEqual(item, otherItem) {
   if (isLegacyOptionsItem(item) || isLegacyOptionsItem(otherItem)) {
     return item.value === otherItem.value
@@ -75,13 +78,20 @@ export default class OptionsArrayInput extends React.PureComponent<OptionsArrayI
     const {type, markers, value, level, readOnly} = this.props
     const options = get(type.options, 'list')
     const direction = get(type.options, 'direction') // vertical and horizontal
+
+    const formFieldProps = {
+      label: type.title,
+      description: type.description,
+      level: level,
+      markers
+    }
+
+    // <Fieldset legend={type.title} description={type.description} markers={markers} level={level}>
+    // </Fieldset>
+
     return (
-      <Fieldset legend={type.title} description={type.description} markers={markers} level={level}>
-        <div
-          className={
-            direction === 'vertical' ? styles.itemWrapperVertical : styles.itemWrapperHorizontal
-          }
-        >
+      <FormField {...formFieldProps}>
+        <div className={styles.root}>
           {options.map((option, index) => {
             const optionType = this.getMemberTypeOfItem(option)
             if (!optionType) {
@@ -108,7 +118,7 @@ export default class OptionsArrayInput extends React.PureComponent<OptionsArrayI
             )
           })}
         </div>
-      </Fieldset>
+      </FormField>
     )
   }
 }
